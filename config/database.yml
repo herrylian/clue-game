@@ -80,6 +80,4 @@ test:
 #
 production:
   <<: *default
-  database: clue_production
-  username: clue_admin
-  password: <%= ENV['MYAPP_DATABASE_PASSWORD'] %>
+  url: <%= ENV['DATABASE_URL'] %>
