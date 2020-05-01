@@ -1,13 +1,22 @@
 <h1>Welcome to the Cluedo game</h1>
-<p>Your submission will be added to the database. Refresh after submission to see it.</p>
 
+<p>Send a message to everyone online right now:</p>
 <%= form_with(url: "/msg", method: "post") do %>
+  <%= label_tag(:p, "Type your message") %>
+  <%= text_field_tag(:p) %>
+  <%= submit_tag("Submit") %>
+<% end %>
+<br>
+<h2>Add Entry to Wall
+<p>Type something to be added to the wall.</p>
+
+<%= form_with(url: "/entry", method: "post") do %>
   <%= label_tag(:q, "Type your message") %>
   <%= text_field_tag(:q) %>
   <%= submit_tag("Submit") %>
 <% end %>
 <br>
-<h2>Entries</h2>
+<h2>Wall Entries</h2>
 <% Dice.all.each do |f| %>
   <%= f.dice %>
   <br>
