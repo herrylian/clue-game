@@ -10,6 +10,6 @@ consumer.subscriptions.create("NotificationChannel", {
   },
 
   received(data) {
-    alert('Received the following message: '+data['body']+'with name: '+data['name'])
+    alert('Received the following message: '+data['body'])
   }
 });

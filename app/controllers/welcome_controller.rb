@@ -4,15 +4,15 @@ class WelcomeController < ApplicationController
 
   def msg
 	message = params[:p]
-	Rails.cache.write("a", "guguguu")
-
-	name = Rails.cache.read("a")
-
-	ActionCable.server.broadcast "global_channel", { body: message, name: name}
+	Rails.cache.write("a", message)
+	puts Rails.cache.read("a")
+	ActionCable.server.broadcast "global_channel", { body: message}
   end
   
   def priv
-  	message = params[:a]
+  	name = Rails.cache.read("a")
+  	puts name
+	ActionCable.server.broadcast "global_channel", { body: name}
   end
 
   def entry
