@@ -13,7 +13,8 @@ consumer.subscriptions.create("GameChannel", {
   	switch(data['action']) {
   		case "hide":
     		alert('Received the following message: '+data['msg'])
-    		$('p').hide()
+    		
+    			$('p').hide()
     		break
     	case "none":
     		alert('Received the following message: '+data['msg']+'youre good!')
