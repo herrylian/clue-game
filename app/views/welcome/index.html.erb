@@ -8,6 +8,7 @@
 <% end %>
 <br>
 
+<div class="bg-info">
 <p id="private">Send a private message:</p>
 <%= form_with(url: "/priv", method: "post") do %>
   <%= label_tag(:a, "Type your message") %>
@@ -15,7 +16,7 @@
   <%= submit_tag("Submit") %>
 <% end %>
 <br>
-
+</div>
 <h2>Add Entry to Wall</h2>
 <p>Type something to be added to the wall.</p>
 
