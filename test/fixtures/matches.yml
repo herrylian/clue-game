@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  and: MyString
+  rails: MyString
+  generate: MyString
+  model: MyString
+  game: MyString
+
+two:
+  and: MyString
+  rails: MyString
+  generate: MyString
+  model: MyString
+  game: MyString
