@@ -2,7 +2,7 @@ import consumer from "./consumer"
 
 consumer.subscriptions.create("GameChannel", {
   connected() {
-    alert('connected')
+    $('p').hide()
   },
 
   disconnected() {
@@ -12,9 +12,7 @@ consumer.subscriptions.create("GameChannel", {
   received(data) {
   	switch(data['action']) {
   		case "hide":
-    		alert('Received the following message: '+data['msg'])
-    		
-    			$('p').hide()
+    		alert('Received the following message: '+data['msg']);
     		break
     	case "none":
     		alert('Received the following message: '+data['msg']+'youre good!')
