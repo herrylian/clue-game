@@ -2,7 +2,7 @@ import consumer from "./consumer"
 
 consumer.subscriptions.create("GameChannel", {
   connected() {
-    $('p').hide()
+    
   },
 
   disconnected() {
@@ -13,10 +13,17 @@ consumer.subscriptions.create("GameChannel", {
   	switch(data['action']) {
   		case "hide":
     		alert('Received the following message: '+data['msg']);
-    		break
-    	case "none":
+    		$('p').hide()
+    	break
+    	case "unhide":
     		alert('Received the following message: '+data['msg']+'youre good!')
-    		break
+    		$('p').show()
+    	break
+    	case "set_identity":
+    		console.log("got to the set_identity part") 
+    		document.cookie = 'player='+data['msg']+'; uuid='+data['uuid']
+    		console.log("got after it") 
+    	break
   	}
   }
 });
