@@ -1,14 +1,14 @@
 <h1>Welcome to the Cluedo game</h1>
 
 <p>Send a message to everyone online right now:</p>
-<%= form_with(url: "/msg", method: "post") do %>
+<%= form_with(url: "/message", method: "post") do %>
   <%= label_tag(:p, "Type your message") %>
   <%= text_field_tag(:p) %>
   <%= submit_tag("Submit") %>
 <% end %>
 <br>
 
-<p>Send a private message:</p>
+<p id="private">Send a private message:</p>
 <%= form_with(url: "/priv", method: "post") do %>
   <%= label_tag(:a, "Type your message") %>
   <%= text_field_tag(:a) %>

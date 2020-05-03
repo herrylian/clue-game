@@ -2,17 +2,17 @@ class WelcomeController < ApplicationController
   def index
   end
 
-  def msg
+  def message
 	message = params[:p]
 	Rails.cache.write("a", message)
 	puts Rails.cache.read("a")
-	ActionCable.server.broadcast "global_channel", { body: message}
+	ActionCable.server.broadcast "player_#{uuid}", { msg: message}
   end
   
   def priv
   	name = Rails.cache.read("a")
   	puts name
-	ActionCable.server.broadcast "global_channel", { body: name}
+	ActionCable.server.broadcast "player_#{uuid}", { msg: name}
   end
 
   def entry
