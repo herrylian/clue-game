@@ -1,9 +1,9 @@
 class Game < ApplicationRecord
 	def self.start(player1, player2)
-    # Randomly choses who gets to be noughts or crosses
+    # Randomly distribute cards and color. Sets up answer as well.
     cross, nought = [player1, player2].shuffle
 
-    # Broadcast back to the players subscribed to the channel that the game has started
+    # Let players know what happened
     ActionCable.server.broadcast "player_#{cross}", {msg: "Cross", action: "hide"}
     ActionCable.server.broadcast "player_#{nought}", {msg: "Nought", action: "hide"}
 
@@ -17,4 +17,14 @@ class Game < ApplicationRecord
     # REDIS.set("opponent_for:#{cross}", nought)
     # REDIS.set("opponent_for:#{nought}", cross)
   end
+
+  # def self.opponent_for(uuid)
+  #REDIS.get("opponent_for:#{uuid}")
+  #end
+
+  #def self.take_turn(uuid, move)
+  #  opponent = opponent_for(uuid)
+
+  #  ActionCable.server.broadcast "player_#{opponent}", {action: "take_turn", move: move['data']}
+  #end
 end

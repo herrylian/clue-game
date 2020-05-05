@@ -8,6 +8,11 @@
 <% end %>
 <br>
 
+<table id='game'></table>
+
+<canvas id="myCanvas" width="200" height="100" style="border:1px solid #d3d3d3;">Your browser does not support the HTML canvas tag.</canvas>
+<button onclick="draw()">Draw line</button>
+
 <div class="bg-info">
 <p id="private">Send a private message:</p>
 <%= form_with(url: "/priv", method: "post") do %>
@@ -30,4 +35,17 @@
 <% Dice.all.each do |f| %>
   <%= f.dice %>
   <br>
+<% end %>
+
+
+<% if false %>
+Dice roll button. Hidden by default. Rolling activates controller. 
+<% end %>
+
+<% if false %>
+Check Rumor drop down, hidden by default. goes back to welcome now. 
+<% end %>
+
+<% if false %>
+End turn. Pass to next person. End turn. Goes back to welcome now. 
 <% end %>

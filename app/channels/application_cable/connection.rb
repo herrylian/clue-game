@@ -4,8 +4,9 @@ module ApplicationCable
 
     def connect
       self.uuid = SecureRandom.urlsafe_base64
-      hello = 'user ID is ' + uuid
-      puts hello
+      # Test to see if it works
+      # hello = 'user ID is ' + uuid
+      # puts hello
     end
   end
 end
