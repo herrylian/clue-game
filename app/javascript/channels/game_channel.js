@@ -15,7 +15,7 @@ consumer.subscriptions.create("GameChannel", {
     		$('p').hide()
     	break
     	case "unhide":
-    		alert('Received the following message: '+data['msg']+'youre good!')
+    		alert('Received the following message: '+data['msg'])
     		$('p').show()
     	break
     	case "set_identity":
@@ -23,11 +23,15 @@ consumer.subscriptions.create("GameChannel", {
     		document.cookie = 'player='+data['msg']+'; uuid='+data['uuid']
     		console.log("got after it") 
     	break
-    	// case take_turn
-    	// 	reveal the dice. 
+    	case "start_turn":
     	//  Set boolean for them to be true
     	//  jquery - Tell them it's their turn. 
-    	// This will now go to index for dice roll. 
+    		$('#dice').show() 
+    	break
+    	case "move":
+    		alert('You rolled a '+data['msg'])
+    	break
+    	
 
     	// case make_move
     	//  (determine location, coordinates)

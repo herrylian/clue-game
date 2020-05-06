@@ -1,22 +1,33 @@
 class Game < ApplicationRecord
-	def self.start(player1, player2)
+	def self.start(player1_uuid, player2_uuid)
+    # Send UUID to client
+    ActionCable.server.broadcast "player_#{player1_uuid}", {msg: player1_uuid, action: "set_identity"}
+    ActionCable.server.broadcast "player_#{player2_uuid}", {msg: player2_uuid, action: "set_identity"}
+
     # Randomly distribute cards and color. Sets up answer as well.
-    cross, nought = [player1, player2].shuffle
+    p1, p2 = [player1_uuid, player2_uuid].shuffle
 
     # Let players know what happened
-    ActionCable.server.broadcast "player_#{cross}", {msg: "Cross", action: "hide"}
-    ActionCable.server.broadcast "player_#{nought}", {msg: "Nought", action: "hide"}
+    ActionCable.server.broadcast "player_#{p1}", {msg: "You are first", action: "hide"}
+    ActionCable.server.broadcast "player_#{p2}", {msg: "You are second", action: "hide"}
+    ActionCable.server.broadcast "player_#{p2}", {msg: "unhiding some stuff", action: "unhide"}
 
-    # Send UUID to client
-    ActionCable.server.broadcast "player_#{cross}", {msg: player1, action: "set_identity"}
-    ActionCable.server.broadcast "player_#{nought}", {msg: player2, action: "set_identity"}
+    # Store the order of the game 
+    Rails.cache.write("turn_order", [p1,p2])
+    order = Rails.cache.read("turn_order")
 
-    ActionCable.server.broadcast "player_#{nought}", {msg: "Nought", action: "unhide"}
+    # testing for order
+    puts "the order is:"
+    puts order
+    
+    # Start game?
+    ActionCable.server.broadcast "player_#{p1}", {msg: "your turn is starting", action: "start_turn"}
 
-    # Store the details of each opponent
-    # REDIS.set("opponent_for:#{cross}", nought)
-    # REDIS.set("opponent_for:#{nought}", cross)
   end
+
+  # def start turn(person)
+  
+
 
   # def self.opponent_for(uuid)
   #REDIS.get("opponent_for:#{uuid}")

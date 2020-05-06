@@ -10,11 +10,14 @@
 
 <table id='game'></table>
 
-<canvas id="myCanvas" width="200" height="100" style="border:1px solid #d3d3d3;">Your browser does not support the HTML canvas tag.</canvas>
-<button onclick="draw()">Draw line</button>
+<canvas id="myCanvas2" width="800" height="800" style="border:1px solid #d3d3d3; background-image: url(https://i.pinimg.com/originals/3c/30/73/3c3073851d38c25820e08e7352eb7577.jpg); background-size:100% 100%;">Your browser does not support the HTML canvas tag.</canvas>
+<button onclick="draw2()">Draw line</button>
+
+<%= button_to "Roll", {action: "dice_roll"}, :form => { :id => "dice" } %>
+
 
 <div class="bg-info">
-<p id="private">Send a private message:</p>
+<p id="private">Check if message is stored in cache</p>
 <%= form_with(url: "/priv", method: "post") do %>
   <%= label_tag(:a, "Type your message") %>
   <%= text_field_tag(:a) %>
@@ -22,14 +25,11 @@
 <% end %>
 <br>
 </div>
+
 <h2>Add Entry to Wall</h2>
 <p>Type something to be added to the wall.</p>
 
-<%= form_with(url: "/entry", method: "post") do %>
-  <%= label_tag(:q, "Type your message") %>
-  <%= text_field_tag(:q) %>
-  <%= submit_tag("Submit") %>
-<% end %>
+
 <br>
 <h2>Wall Entries</h2>
 <% Dice.all.each do |f| %>
@@ -39,7 +39,7 @@
 
 
 <% if false %>
-Dice roll button. Hidden by default. Rolling activates controller. 
+Dice roll button. Hidden by default. Rolling activates controller. <%= image_tag("board.jpg") %>
 <% end %>
 
 <% if false %>

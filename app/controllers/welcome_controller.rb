@@ -21,11 +21,14 @@ class WelcomeController < ApplicationController
 	sum = [Dice.all.count].to_s
   end
 
-# def dice_roll
-# 	roll a number. 
+def dice_roll
+	roll = rand(2..12) 
+	order = Rails.cache.read("turn_order")
+	current = order[0]
+	ActionCable.server.broadcast "player_#{current}", { action: "move", msg: roll}
 # 	broadcast that they can move this number. MakeMove(#)
 #  	This will now go back to game channel.js
-# end 
+end 
 
 # def determine_location
 #  determine location. [If intrigue, If Rumor, call rumor function. give them an intrigue,] -> then call end of turn. If pool, call the pool function. 
