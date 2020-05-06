@@ -8,9 +8,9 @@ class Match < ApplicationRecord
       		people = Rails.cache.read("people")
       		Rails.cache.write("people", people+1)
 	  		Rails.cache.write('Player2', uuid)
-	  		player1 = Rails.cache.read('Player1')
-	  		player2 = Rails.cache.read('Player2')
-      		Game.start(player1, player2)
+	  		player1_uuid = Rails.cache.read('Player1')
+	  		player2_uuid = Rails.cache.read('Player2')
+      		Game.start(player1_uuid, player2_uuid)
       		Rails.cache.write("people", nil)
     end
   end
