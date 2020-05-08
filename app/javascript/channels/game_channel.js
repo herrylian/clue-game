@@ -2,6 +2,7 @@ import consumer from "./consumer"
 
 consumer.subscriptions.create("GameChannel", {
   connected() {
+  	$('#dice').hide()
   },
 
   disconnected() {
@@ -30,12 +31,9 @@ consumer.subscriptions.create("GameChannel", {
     	break
     	case "move":
     		alert('You rolled a '+data['msg'])
+    		// (determine location, coordinates)
+    		// Javascript make move. -> pick choice, back to welcome controller. 
     	break
-    	
-
-    	// case make_move
-    	//  (determine location, coordinates)
-    	// Javascript make move. -> pick choice, back to welcome controller. 
 
     	// case start_rumor
     	// unhide rumor drodpdowns

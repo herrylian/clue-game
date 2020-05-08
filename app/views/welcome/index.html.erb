@@ -1,34 +1,21 @@
 <h1>Welcome to the Cluedo game</h1>
 
-<p>Send a message to everyone online right now:</p>
+<table id='game'></table>
+
+<canvas id="myCanvas2" width="700" height="700" style="border:1px solid #d3d3d3; background-image: url(https://i.pinimg.com/originals/3c/30/73/3c3073851d38c25820e08e7352eb7577.jpg); background-size:100% 100%;">Your browser does not support the HTML canvas tag.</canvas>
+<br>
+
 <%= form_with(url: "/message", method: "post") do %>
-  <%= label_tag(:p, "Type your message") %>
+  <%= label_tag(:p, "Type your message to everyone else") %>
   <%= text_field_tag(:p) %>
   <%= submit_tag("Submit") %>
 <% end %>
 <br>
-
-<table id='game'></table>
-
-<canvas id="myCanvas2" width="800" height="800" style="border:1px solid #d3d3d3; background-image: url(https://i.pinimg.com/originals/3c/30/73/3c3073851d38c25820e08e7352eb7577.jpg); background-size:100% 100%;">Your browser does not support the HTML canvas tag.</canvas>
-<button onclick="draw2()">Draw line</button>
-
 <%= button_to "Roll", {action: "dice_roll"}, :form => { :id => "dice" } %>
-
-
-<div class="bg-info">
-<p id="private">Check if message is stored in cache</p>
-<%= form_with(url: "/priv", method: "post") do %>
-  <%= label_tag(:a, "Type your message") %>
-  <%= text_field_tag(:a) %>
-  <%= submit_tag("Submit") %>
-<% end %>
-<br>
-</div>
+<button onclick="draw2()">Draw line</button>
 
 <h2>Add Entry to Wall</h2>
 <p>Type something to be added to the wall.</p>
-
 
 <br>
 <h2>Wall Entries</h2>
