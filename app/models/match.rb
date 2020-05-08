@@ -12,6 +12,6 @@ class Match < ApplicationRecord
 	  		player2_uuid = Rails.cache.read('Player2')
       		Game.start(player1_uuid, player2_uuid)
       		Rails.cache.write("people", nil)
+	    end  	
     end
-  end
 end

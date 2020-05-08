@@ -5,10 +5,6 @@ var BlackPieces = "#000000";
 var WhitePieces = "#ffffff";
 var canvas;
 var ctx;
-var dice;
-
-dice = document.getElementById("dice");
-dice.hide();
 
 function Box(row, column, color) {
   this.row = row;
