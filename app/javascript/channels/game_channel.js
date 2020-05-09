@@ -11,22 +11,12 @@ consumer.subscriptions.create("GameChannel", {
 
   received(data) {
   	switch(data['action']) {
-  		case "hide":
-    		alert('Received the following message: '+data['msg']);
-    		$('p').hide()
-    	break
-    	case "unhide":
-    		alert('Received the following message: '+data['msg'])
-    		$('p').show()
-    	break
     	case "set_identity":
-    		console.log("got to the set_identity part") 
-    		document.cookie = 'player='+data['msg']+'; uuid='+data['uuid']
-    		console.log("got after it") 
+    		document.cookie = 'uuid='+data['msg']
     	break
     	case "start_turn":
-    	//  Set boolean for them to be true
-    	//  jquery - Tell them it's their turn. 
+    		//  Set boolean for them to be true
+    		//  jquery - Tell them it's their turn. 
     		$('#dice').show() 
     	break
     	case "move":
@@ -34,6 +24,10 @@ consumer.subscriptions.create("GameChannel", {
     		// (determine location, coordinates)
     		// Javascript make move. -> pick choice, back to welcome controller. 
     	break
+    	case "send_message":
+    		alert(data['player_name']+" said: "+data['message'])
+    	break
+    	
 
     	// case start_rumor
     	// unhide rumor drodpdowns
@@ -47,6 +41,14 @@ consumer.subscriptions.create("GameChannel", {
     	//case rumor is confirmed
     	// show the original guy. 
     	// Javascript end turn goes back to index. 
+    	// case "hide":
+    		//alert('Received the following message: '+data['msg']);
+    		//$('p').hide()
+    	//break
+    	//case "unhide":
+    		//alert('Received the following message: '+data['msg'])
+    		//$('p').show()
+    	//break
   	}
   }
 });

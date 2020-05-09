@@ -20,27 +20,30 @@ class Game < ApplicationRecord
 
 	    puts "answer is:"
 	    puts answer
-	    puts "cards are:"
-	    puts cards
 
-	    # Let players know what happened
-	    ActionCable.server.broadcast "player_#{p1}", {msg: "You are first", action: "hide"}
-	    ActionCable.server.broadcast "player_#{p2}", {msg: "You are second", action: "hide"}
-	    ActionCable.server.broadcast "player_#{p2}", {msg: "unhiding some stuff", action: "unhide"}
+	    wow = cards.each_slice(7).to_a
+	    puts "everyone has ________________"
+	    puts wow[0]
+	    puts "then  ________________"
+	    puts wow[1]
+	    puts "finally  ________________"
+	    puts wow[2]
 
 	    # Store the order of the game 
 	    Rails.cache.write("turn_order", [p1,p2])
-	    order = Rails.cache.read("turn_order")
-
-	    # testing for order
-	    puts "the order is:"
-	    puts order
 	    
 	    # Start game?
 	    ActionCable.server.broadcast "player_#{p1}", {msg: "your turn is starting", action: "start_turn"}
 	end
 
   
+
+
+# Let players know what happened
+	    # ActionCable.server.broadcast "player_#{p1}", {msg: "You are first", action: "hide"}
+	    # ActionCable.server.broadcast "player_#{p2}", {msg: "You are second", action: "hide"}
+	    # ActionCable.server.broadcast "player_#{p2}", {msg: "unhiding some stuff", action: "unhide"}
+
   # def start turn(person)
 
   # def self.opponent_for(uuid)
