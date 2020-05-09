@@ -6,13 +6,21 @@
 <br>
 
 <%= form_with(url: "/message", method: "post") do %>
-  <%= label_tag(:p, "Type your message to everyone else") %>
+  <%= label_tag(:p, "Send your message to everyone else") %>
   <%= text_field_tag(:p) %>
   <%= submit_tag("Submit") %>
 <% end %>
 <br>
+
 <%= button_to "Roll", {action: "dice_roll"}, :form => { :id => "dice" } %>
 <button onclick="draw2()">Draw line</button>
+
+<%= form_with(url: "/set_name_cookie", method: "post") do %>
+  <%= label_tag(:p, "Enter your name") %>
+  <%= text_field_tag(:p) %>
+  <%= submit_tag("Submit") %>
+<% end %>
+<br>
 
 <h2>Add Entry to Wall</h2>
 <p>Type something to be added to the wall.</p>

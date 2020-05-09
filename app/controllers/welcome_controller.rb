@@ -4,10 +4,11 @@ class WelcomeController < ApplicationController
 
   def message
 	message = params[:p]
+	player_name = cookies[:name]
 	order = Rails.cache.read("turn_order")
 	for i in 0..order.length-1
 		uuid = order[i]
-		ActionCable.server.broadcast "player_#{uuid}", { msg: message}
+		ActionCable.server.broadcast "player_#{uuid}", { action: "send_message", message: message, player_name: player_name}
 	end
   end
 
@@ -32,6 +33,14 @@ class WelcomeController < ApplicationController
 
   end	
 
+  def set_name_cookie
+	name = params[:p]
+	cookies[:name] = name
+	wow = cookies[:uuid] 
+	value = cookies[:name]
+	puts value
+	puts wow
+  end 
 
 # check choice. If the choice is the choice is they have the card, then broadcast this to original guy. 
 # Else, check_rumor the other guy?
