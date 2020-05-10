@@ -30,7 +30,12 @@ consumer.subscriptions.create("GameChannel", {
     	case "send_message":
     		alert(data['player_name']+" said: "+data['message'])
     	break
-    	
+    	case "private_message":
+    		alert(data['message'])
+    	break
+    	case "add_cards":
+    		$('#cards').append(data['msg']+"<br>")
+    	break
 
     	// case start_rumor
     	// unhide rumor drodpdowns

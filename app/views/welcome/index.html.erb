@@ -22,17 +22,16 @@
 <% end %>
 <br>
 
-
 <br>
-<h2>Wall Entries</h2>
-<% Dice.all.each do |f| %>
-  <%= f.dice %>
-  <br>
-<% end %>
+<h2>Your Cards</h2>
+<p id ="cards"></p>
 
 
 <% if false %>
 Dice roll button. Hidden by default. Rolling activates controller. <%= image_tag("board.jpg") %>
+<% Dice.all.each do |f| %>
+  <%= f.dice %>
+  <% end %>
 <% end %>
 
 <% if false %>

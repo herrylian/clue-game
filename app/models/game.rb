@@ -26,6 +26,12 @@ class Game < ApplicationRecord
 
 	    distributed_cards = cards.each_slice(7).to_a
 
+	    for i in 0..2
+	    	Rails.cache.write(turn_order[i], distributed_cards[i])
+	    	for f in 0..6
+	    		ActionCable.server.broadcast "player_#{turn_order[i]}", {msg: distributed_cards[i][f], action: "add_cards"}
+	    	end
+	    end 
 	    puts "everyone has ________________"
 	    puts distributed_cards[0]
 	    puts "then  ________________"
