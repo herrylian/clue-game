@@ -17,10 +17,12 @@ consumer.subscriptions.create("GameChannel", {
     	case "start_turn":
     		//  Set boolean for them to be true
     		//  jquery - Tell them it's their turn. 
+    		alert("it's your turn. roll the dice")
     		$('#dice').show() 
     	break
     	case "move":
     		alert('You rolled a '+data['msg'])
+    		$('#dice').hide() 
     		// (determine location, coordinates)
     		// Javascript make move. -> pick choice, back to welcome controller. 
     	break

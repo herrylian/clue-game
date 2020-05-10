@@ -1,12 +1,15 @@
 class Game < ApplicationRecord
-	def self.start(player1_uuid, player2_uuid)
+	def self.start(player1_uuid, player2_uuid, player3_uuid)
 	    # Send UUID to client
 	    ActionCable.server.broadcast "player_#{player1_uuid}", {msg: player1_uuid, action: "set_identity"}
 	    ActionCable.server.broadcast "player_#{player2_uuid}", {msg: player2_uuid, action: "set_identity"}
+ 		ActionCable.server.broadcast "player_#{player3_uuid}", {msg: player3_uuid, action: "set_identity"}
+	    
+	    # Randomize order of players
+	    turn_order = [player1_uuid, player2_uuid, player3_uuid].shuffle
+	    Rails.cache.write("turn_order", turn_order)
 
-	    # Randomly distribute cards and color. Sets up answer as well.
-	    p1, p2 = [player1_uuid, player2_uuid].shuffle
-
+		# Randomly distribute cards and color. Sets up answer as well.
 	    cards = ["mustard", "plum", "green", "peacock", "scarlet", "white", "knife", "candlestick", "pistol", "poison", "trophy", "rope", "bat", "ax", "dumbbell", "hall", "dining room", "kitchen", "patio", "observatory", "theater", "living room", "spa", "guest house"]
 		person = rand(0..5)
 		weapon = rand(6..14)
@@ -21,19 +24,17 @@ class Game < ApplicationRecord
 	    puts "answer is:"
 	    puts answer
 
-	    wow = cards.each_slice(7).to_a
-	    puts "everyone has ________________"
-	    puts wow[0]
-	    puts "then  ________________"
-	    puts wow[1]
-	    puts "finally  ________________"
-	    puts wow[2]
+	    distributed_cards = cards.each_slice(7).to_a
 
-	    # Store the order of the game 
-	    Rails.cache.write("turn_order", [p1,p2])
+	    puts "everyone has ________________"
+	    puts distributed_cards[0]
+	    puts "then  ________________"
+	    puts distributed_cards[1]
+	    puts "finally  ________________"
+	    puts distributed_cards[2]
 	    
-	    # Start game?
-	    ActionCable.server.broadcast "player_#{p1}", {msg: "your turn is starting", action: "start_turn"}
+	    # Start game
+	    ActionCable.server.broadcast "player_#{turn_order[0]}", {msg: "your turn is starting", action: "start_turn"}
 	end
 
   

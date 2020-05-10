@@ -20,9 +20,9 @@ class WelcomeController < ApplicationController
 
   def dice_roll
 	roll = rand(2..12) 
-	order = Rails.cache.read("turn_order")
-	current = order[0]
+	current = cookies[:uuid]
 	ActionCable.server.broadcast "player_#{current}", { action: "move", msg: roll}
+	# need to modify this to let everyone know what you rolled 
   end 
   
   def check_rumor(room, weapon, person)
@@ -36,10 +36,7 @@ class WelcomeController < ApplicationController
   def set_name_cookie
 	name = params[:p]
 	cookies[:name] = name
-	wow = cookies[:uuid] 
-	value = cookies[:name]
-	puts value
-	puts wow
+	# gotta hide cookie
   end 
 
 # check choice. If the choice is the choice is they have the card, then broadcast this to original guy. 
