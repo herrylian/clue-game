@@ -3,6 +3,7 @@ import consumer from "./consumer"
 consumer.subscriptions.create("GameChannel", {
   connected() {
   	$('#dice').hide()
+  	alert('connected')
   },
 
   disconnected() {
