@@ -10,7 +10,7 @@ class Game < ApplicationRecord
 	    Rails.cache.write("turn_order", turn_order)
 
 		# Randomly distribute cards and color. Sets up answer as well.
-	    cards = ["mustard", "plum", "green", "peacock", "scarlet", "white", "knife", "candlestick", "pistol", "poison", "trophy", "rope", "bat", "ax", "dumbbell", "hall", "dining room", "kitchen", "patio", "observatory", "theater", "living room", "spa", "guest house"]
+	    cards = ["Mustard", "Plum", "Green", "Peacock", "Scarlet", "White", "Knife", "Candlestick", "Pistol", "Poison", "Trophy", "Rope", "Bat", "Ax", "Dumbbell", "Hall", "Dining Room", "Kitchen", "Patio", "Observatory", "Theater", "Living Room", "Spa", "Guest House"]
 		person = rand(0..5)
 		weapon = rand(6..14)
 		room = rand(15..23)
@@ -32,34 +32,14 @@ class Game < ApplicationRecord
 	    		ActionCable.server.broadcast "player_#{turn_order[i]}", {msg: distributed_cards[i][f], action: "add_cards"}
 	    	end
 	    end 
-	    puts "everyone has ________________"
-	    puts distributed_cards[0]
-	    puts "then  ________________"
-	    puts distributed_cards[1]
-	    puts "finally  ________________"
-	    puts distributed_cards[2]
 	    
 	    # Start game
-	    ActionCable.server.broadcast "player_#{turn_order[0]}", {msg: "your turn is starting", action: "start_turn"}
-	end
-
-  
-
-
-# Let players know what happened
+	    # Let players know the turn order.
 	    # ActionCable.server.broadcast "player_#{p1}", {msg: "You are first", action: "hide"}
 	    # ActionCable.server.broadcast "player_#{p2}", {msg: "You are second", action: "hide"}
 	    # ActionCable.server.broadcast "player_#{p2}", {msg: "unhiding some stuff", action: "unhide"}
 
-  # def start turn(person)
 
-  # def self.opponent_for(uuid)
-  #REDIS.get("opponent_for:#{uuid}")
-  #end
-
-  #def self.take_turn(uuid, move)
-  #  opponent = opponent_for(uuid)
-
-  #  ActionCable.server.broadcast "player_#{opponent}", {action: "take_turn", move: move['data']}
-  #end
+	    ActionCable.server.broadcast "player_#{turn_order[0]}", {msg: "It's your turn.", action: "start_turn"}
+	end
 end

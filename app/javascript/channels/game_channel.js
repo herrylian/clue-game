@@ -3,6 +3,8 @@ import consumer from "./consumer"
 consumer.subscriptions.create("GameChannel", {
   connected() {
   	$('#dice').hide()
+  	$('#answerChoices').hide()
+  	$('#endTurn').hide()
   	alert('connected')
   },
 
@@ -37,14 +39,27 @@ consumer.subscriptions.create("GameChannel", {
     		$('#cards').append(data['msg']+"<br>")
     	break
 
-    	// case start_rumor
-    	// unhide rumor drodpdowns
-    	// Javascript, make a move
+    	case "check_rumor":
+    		if(data['rumor'].length === 0)
+    			alert("array is empty")
+    		else
+    			$('#answerChoices').show()
+    			for(var i = 0; i < data['rumor'].length; i++) {
+    				alert(data['rumor'][i])
+    			}
 
-    	// case receive_rumor_request
-    	// ok this is what you've been told. Jquery
-    	//  Reveal 3 buttons and corresponding choices. 
-    	// Javascript file -> pick choice , choice return back to welcome controller
+    			// data['rumor']
+    			// alert(new_options[0])
+				// $('#answerChoices').empty()
+				// $each(new_options, function(value) {
+    				//new Element('option')
+        			//.set('text', value)
+        			//.inject($('#answerChoices'));
+				//});
+    	break
+ 		case "end_turn":
+ 			$('#endTurn').show()
+ 		break
 
     	//case rumor is confirmed
     	// show the original guy. 
