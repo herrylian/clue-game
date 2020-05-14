@@ -24,14 +24,27 @@ class WelcomeController < ApplicationController
 	ActionCable.server.broadcast "player_#{current}", { action: "move", msg: roll}
 	# need to modify this to let everyone know what you rolled 
   end 
-  
-  def check_rumor(room, weapon, person)
-	order = Rails.cache.read("turn_order")
-	# broadcast that it's going to order[1]
-	# check if they have it. 
-	# then broadcast to the first player in order. to player what we see, and which one they'd like to show.
 
-  end	
+  def rumor
+  	Rails.cache.write("current_rumor", [params[:room], params[:weapon], params[:person]])
+  	order = Rails.cache.read("turn_order")
+  	options = []
+  	next_player_cards = Rails.cache.read(order[1])
+  	rumor_cards = Rails.cache.read("current_rumor")
+  	for i in 0..2
+  		if next_player_cards.include? rumor_cards[i] 
+  			options.append(rumor_cards[i])
+  		end
+  	end
+  	ActionCable.server.broadcast "player_#{order[1]}", { action: "check_rumor", rumor: options}
+
+  end
+
+  def choose
+  	order = Rails.cache.read("turn_order")
+  	ActionCable.server.broadcast "player_#{order[0]}", { action: "private_message", message: params[:card] }
+  	ActionCable.server.broadcast "player_#{order[0]}", { action: "end_turn"}
+  end
 
   def set_name_cookie
 	name = params[:p]
@@ -39,12 +52,19 @@ class WelcomeController < ApplicationController
 	# gotta hide cookie
   end 
 
+  def end_turn
+  	order = Rails.cache.read("turn_order")
+  	last_player = order.shift
+  	order << last_player
+  	Rails.cache.write("turn_order", order)
+  	ActionCable.server.broadcast "player_#{order[0]}", {msg: "your turn is starting", action: "start_turn"}
+  end
+
 # check choice. If the choice is the choice is they have the card, then broadcast this to original guy. 
 # Else, check_rumor the other guy?
 # if there's no other guy, then broadcast that nothing was done.
 
-# def pass_to next person.
-# broadcast_take turn. this goes back to gamechannel now. 
+
 end
 
 # def determine_location
