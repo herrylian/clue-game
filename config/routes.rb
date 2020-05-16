@@ -8,5 +8,7 @@ Rails.application.routes.draw do
   post 'rumor' => 'welcome#rumor', as: :rumor
   post 'choose' => 'welcome#choose', as: :choose
   post 'end_turn' => 'welcome#end_turn', as: :end_turn
+  post 'pass' => 'welcome#pass', as: :pass
+  post 'skip' => 'welcome#skip', as: :skip
 
 end

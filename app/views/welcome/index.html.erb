@@ -5,7 +5,7 @@
 <canvas id="myCanvas2" width="700" height="700" style="border:1px solid #d3d3d3; background-image: url(https://i.pinimg.com/originals/3c/30/73/3c3073851d38c25820e08e7352eb7577.jpg); background-size:100% 100%;">Your browser does not support the HTML canvas tag.</canvas>
 <br>
 
-<%= form_with(url: "/set_name_cookie", method: "post") do %>
+<%= form_with(url: "/set_name_cookie", method: "post", :html => { :id => "name_field" }) do %>
   <%= label_tag(:p, "Enter your name") %>
   <%= text_field_tag(:p) %>
   <%= submit_tag("Submit") %>
@@ -20,16 +20,19 @@
 
 <%= button_to "Roll", {action: "dice_roll"}, :form => { :id => "dice" } %>
 
-
 <br>
 
-<%= form_with(url: "/rumor", method: "post") do %> 
+<%= form_with(url: "/rumor", method: "post", :html => { :id => "rumorDropdowns" }) do %> 
   <%= select_tag(:room, options_for_select([["Hall", "Hall"], ["Dining Room", "Dining Room"], ["Kitchen", "Kitchen"], ["Patio", "Patio"], ["Observatory", "Observatory"], ["Theater", "Theater"], ["Living Room", "Living Room"], ["Spa", "Spa"], ["Guest House", "Guest House"]])) %>
   <%= select_tag(:weapon, options_for_select([["Knife", "Knife"], ["Candlestick", "Candlestick"], ["Pistol", "Pistol"], ["Poison", "Poison"], ["Trophy", "Trophy"], ["Rope", "Rope"], ["Bat", "Bat"], ["Ax", "Ax"], ["Dumbbell", "Dumbbell"]])) %>
   <%= select_tag(:person, options_for_select([["Mustard", "Mustard"], ["Plum", "Plum"], ["Green", "Green"], ["Peacock", "Peacock"], ["Scarlet", "Scarlet"], ["White", "White"]])) %>
   <%= submit_tag("Submit") %>
 <% end %>
 <br>
+
+<%= button_to "Skip", {action: "skip"}, :form => { :id => "skipToNextPlayerButton" } %>
+<%= button_to "Pass", {action: "pass"}, :form => { :id => "passButton" } %>
+
 <%= form_with(url: "/choose", method: "post", :html => { :id => "answerChoices" }) do %> 
   <%= label_tag(:card, "What do you want to show?") %>
   <%= text_field_tag(:card) %>
