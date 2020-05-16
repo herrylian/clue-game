@@ -1,28 +1,28 @@
 class WelcomeController < ApplicationController
   def index
   end
+  
+  def set_name_cookie
+  	name = params[:p]
+  	cookies[:name] = name
+  	# gotta hide cookie
+  end 
 
   def message
-	message = params[:p]
-	player_name = cookies[:name]
-	order = Rails.cache.read("turn_order")
-	for i in 0..order.length-1
-		uuid = order[i]
-		ActionCable.server.broadcast "player_#{uuid}", { action: "send_message", message: message, player_name: player_name}
-	end
-  end
-
-  def entry
-  	message = params[:q]
-	Dice.create(:dice => message)
-	sum = [Dice.all.count].to_s
+  	message = params[:p]
+  	player_name = cookies[:name]
+  	order = Rails.cache.read("turn_order")
+  	for i in 0..order.length-1
+  		uuid = order[i]
+  		ActionCable.server.broadcast "player_#{uuid}", { action: "send_message", message: message, player_name: player_name}
+  	end
   end
 
   def dice_roll
-	roll = rand(2..12) 
-	current = cookies[:uuid]
-	ActionCable.server.broadcast "player_#{current}", { action: "move", msg: roll}
-	# need to modify this to let everyone know what you rolled 
+  	roll = rand(2..12) 
+  	current = cookies[:uuid]
+  	ActionCable.server.broadcast "player_#{current}", { action: "move", msg: roll}
+  	# need to modify this to let everyone know what you rolled 
   end 
 
   def rumor
@@ -36,24 +36,44 @@ class WelcomeController < ApplicationController
   			options.append(rumor_cards[i])
   		end
   	end
-  	ActionCable.server.broadcast "player_#{order[1]}", { action: "check_rumor", rumor: options}
-
+  	ActionCable.server.broadcast "player_#{order[1]}", { action: "check_rumor", rumor: options, last: "false" }
   end
 
+  def skip
+    rumor_cards = Rails.cache.read("current_rumor")
+    order = Rails.cache.read("turn_order")
+    options = []
+    next_player_cards = Rails.cache.read(order[2])
+    for i in 0..2
+      if next_player_cards.include? rumor_cards[i] 
+        options.append(rumor_cards[i])
+      end
+    end
+    ActionCable.server.broadcast "player_#{order[2]}", { action: "check_rumor", rumor: options, last: "true" }
+  end
+
+  def pass
+  	order = Rails.cache.read("turn_order")
+  	player_name = cookies[:name]
+  	player_uuid = cookies[:uuid]
+  	message = player_name+" did not show a card and passed."
+  	ActionCable.server.broadcast "player_#{order[0]}", { action: "send_message", message: message }
+  	ActionCable.server.broadcast "player_#{order[1]}", { action: "send_message", message: message }
+  	ActionCable.server.broadcast "player_#{order[2]}", { action: "send_message", message: message }
+
+  	ActionCable.server.broadcast "player_#{player_uuid}", { action: "hide_pass_button" }
+    ActionCable.server.broadcast "player_#{order[0]}", { action: "end_turn"}
+  end
+  	
   def choose
   	order = Rails.cache.read("turn_order")
   	ActionCable.server.broadcast "player_#{order[0]}", { action: "private_message", message: params[:card] }
   	ActionCable.server.broadcast "player_#{order[0]}", { action: "end_turn"}
   end
 
-  def set_name_cookie
-	name = params[:p]
-	cookies[:name] = name
-	# gotta hide cookie
-  end 
-
   def end_turn
   	order = Rails.cache.read("turn_order")
+  	ActionCable.server.broadcast "player_#{order[0]}", { action: "hide_end_turn_button"}
   	last_player = order.shift
   	order << last_player
   	Rails.cache.write("turn_order", order)
@@ -71,3 +91,9 @@ end
 #  determine location. [If intrigue, If Rumor, call rumor function. give them an intrigue,] -> then call end of turn. If pool, call the pool function. 
 #   At the end, send end of turn. 
 # Broadcast rumor, take them to JS
+
+#  def entry
+#	message = params[:q]
+#	Dice.create(:dice => message)
+#	sum = [Dice.all.count].to_s
+#  end

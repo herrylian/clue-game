@@ -5,6 +5,9 @@ consumer.subscriptions.create("GameChannel", {
   	$('#dice').hide()
   	$('#answerChoices').hide()
   	$('#endTurn').hide()
+  	$('#rumorDropdowns').hide()
+  	$('#passButton').hide()
+    $('#skipToNextPlayerButton').hide()
   	alert('connected')
   },
 
@@ -16,11 +19,12 @@ consumer.subscriptions.create("GameChannel", {
   	switch(data['action']) {
     	case "set_identity":
     		document.cookie = 'uuid='+data['msg']
+    		$('#name_field').hide() 
     	break
     	case "start_turn":
     		//  Set boolean for them to be true
     		//  jquery - Tell them it's their turn. 
-    		alert("it's your turn. roll the dice")
+    		alert("It's your turn. roll the dice")
     		$('#dice').show() 
     	break
     	case "move":
@@ -28,6 +32,7 @@ consumer.subscriptions.create("GameChannel", {
     		$('#dice').hide() 
     		// (determine location, coordinates)
     		// Javascript make move. -> pick choice, back to welcome controller. 
+    		$('#rumorDropdowns').show()
     	break
     	case "send_message":
     		alert(data['player_name']+" said: "+data['message'])
@@ -41,7 +46,10 @@ consumer.subscriptions.create("GameChannel", {
 
     	case "check_rumor":
     		if(data['rumor'].length === 0)
-    			alert("array is empty")
+    			if(data['last'] === 'false')
+            $('#skipToNextPlayerButton').show()
+          else 
+            $('#passButton').show()
     		else
     			$('#answerChoices').show()
     			for(var i = 0; i < data['rumor'].length; i++) {
@@ -58,9 +66,16 @@ consumer.subscriptions.create("GameChannel", {
 				//});
     	break
  		case "end_turn":
+ 			$('#rumorDropdowns').hide()
  			$('#endTurn').show()
  		break
-
+ 		case "hide_pass_button":
+ 			$('#passButton').hide()
+ 		break
+ 		case "hide_end_turn_button":
+ 			$('#endTurn').hide()
+ 		break
+ 		
     	//case rumor is confirmed
     	// show the original guy. 
     	// Javascript end turn goes back to index. 
