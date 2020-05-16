@@ -26,20 +26,24 @@ class Game < ApplicationRecord
 
 	    distributed_cards = cards.each_slice(7).to_a
 
+	    
+	    # first = Rails.cache.read(turn_order[0])
+	    # second = Rails.cache.read(turn_order[1])
+	    # third = Rails.cache.read(turn_order[2])
+	    # kickoff_message = "Let's start the game. "+first+"is first. Next will be "+second+". "+third+" is last."
+	    kickoff_message = "Let's start the game. Someone is rolling the dice."
+	    # Start game
+	    # Let players know the turn order.
 	    for i in 0..2
 	    	Rails.cache.write(turn_order[i], distributed_cards[i])
 	    	for f in 0..6
 	    		ActionCable.server.broadcast "player_#{turn_order[i]}", {msg: distributed_cards[i][f], action: "add_cards"}
 	    	end
+	    	ActionCable.server.broadcast "player_#{turn_order[i]}", {message: kickoff_message, action: "send_message", player: "game announcer"}
 	    end 
-	    
-	    # Start game
-	    # Let players know the turn order.
-	    # ActionCable.server.broadcast "player_#{p1}", {msg: "You are first", action: "hide"}
-	    # ActionCable.server.broadcast "player_#{p2}", {msg: "You are second", action: "hide"}
-	    # ActionCable.server.broadcast "player_#{p2}", {msg: "unhiding some stuff", action: "unhide"}
-
 
 	    ActionCable.server.broadcast "player_#{turn_order[0]}", {msg: "It's your turn.", action: "start_turn"}
+
+
 	end
 end

@@ -24,21 +24,21 @@ consumer.subscriptions.create("GameChannel", {
     	case "start_turn":
     		//  Set boolean for them to be true
     		//  jquery - Tell them it's their turn. 
-    		alert("It's your turn. roll the dice")
+    		$('#text_box').append("It's your turn. Roll the dice."+"<br>")
     		$('#dice').show() 
     	break
     	case "move":
-    		alert('You rolled a '+data['msg'])
+    		$('#text_box').append('You rolled a '+data['msg']+".<br>")
     		$('#dice').hide() 
     		// (determine location, coordinates)
     		// Javascript make move. -> pick choice, back to welcome controller. 
     		$('#rumorDropdowns').show()
     	break
     	case "send_message":
-    		alert(data['player_name']+" said: "+data['message'])
+    		$('#text_box').append(data['player_name']+" said: "+data['message']+"<br>")
     	break
     	case "private_message":
-    		alert(data['message'])
+    		$('#text_box').append(data['message']+"<br>")
     	break
     	case "add_cards":
     		$('#cards').append(data['msg']+"<br>")
@@ -53,7 +53,7 @@ consumer.subscriptions.create("GameChannel", {
     		else
     			$('#answerChoices').show()
     			for(var i = 0; i < data['rumor'].length; i++) {
-    				alert(data['rumor'][i])
+    				$('#text_box').append(data['rumor'][i]+"<br>")
     			}
 
     			// data['rumor']

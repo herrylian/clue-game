@@ -1,53 +1,57 @@
-<h1>Welcome to the Cluedo game</h1>
+<h2>Welcome to the Cluedo game</h2>
 
 <table id='game'></table>
 
-<canvas id="myCanvas2" width="700" height="700" style="border:1px solid #d3d3d3; background-image: url(https://i.pinimg.com/originals/3c/30/73/3c3073851d38c25820e08e7352eb7577.jpg); background-size:100% 100%;">Your browser does not support the HTML canvas tag.</canvas>
-<br>
+<div class ="container">
+  <div class="row">
+    <div class="col">
+      <canvas id="myCanvas2" width="500" height="500" style="border:1px solid #d3d3d3; background-image: url(https://i.pinimg.com/originals/3c/30/73/3c3073851d38c25820e08e7352eb7577.jpg); background-size:100% 100%;">Your browser does not support the HTML canvas tag.</canvas>
+    </div>
+    <div class="col">
+      <h2>Your Cards</h2>
+      <p id ="cards"></p>
+      <div id="chat_box">
+        <p id="text_box"></p>  
+      </div>
+      <%= form_with(url: "/message", method: "post") do %>
+          <%= label_tag(:p, "Chat:") %>
+          <%= text_field_tag(:p) %>
+          <%= submit_tag("Submit") %>
+        <% end %>
+    </div>
+  </div>
+</div>
 
-<%= form_with(url: "/set_name_cookie", method: "post", :html => { :id => "name_field" }) do %>
-  <%= label_tag(:p, "Enter your name") %>
-  <%= text_field_tag(:p) %>
-  <%= submit_tag("Submit") %>
-<% end %>
-<br>
-<%= form_with(url: "/message", method: "post") do %>
-  <%= label_tag(:p, "Send your message to everyone else") %>
-  <%= text_field_tag(:p) %>
-  <%= submit_tag("Submit") %>
-<% end %>
-<br>
+<div class ="container">
+  <div class="row">
+    <div class="col">
+      <%= form_with(url: "/set_name_cookie", method: "post", :html => { :id => "name_field" }) do %>
+      <%= label_tag(:p, "Enter your name") %>
+      <%= text_field_tag(:p) %>
+      <%= submit_tag("Submit") %>
+      <% end %>
+      <%= button_to "Roll", {action: "dice_roll"}, :form => { :id => "dice" } %>
+      <%= form_with(url: "/rumor", method: "post", :html => { :id => "rumorDropdowns" }) do %> 
+        <%= select_tag(:room, options_for_select([["Hall", "Hall"], ["Dining Room", "Dining Room"], ["Kitchen", "Kitchen"], ["Patio", "Patio"], ["Observatory", "Observatory"], ["Theater", "Theater"], ["Living Room", "Living Room"], ["Spa", "Spa"], ["Guest House", "Guest House"]])) %>
+        <%= select_tag(:weapon, options_for_select([["Knife", "Knife"], ["Candlestick", "Candlestick"], ["Pistol", "Pistol"], ["Poison", "Poison"], ["Trophy", "Trophy"], ["Rope", "Rope"], ["Bat", "Bat"], ["Ax", "Ax"], ["Dumbbell", "Dumbbell"]])) %>
+        <%= select_tag(:person, options_for_select([["Mustard", "Mustard"], ["Plum", "Plum"], ["Green", "Green"], ["Peacock", "Peacock"], ["Scarlet", "Scarlet"], ["White", "White"]])) %>
+        <%= submit_tag("Submit") %>
+      <% end %>
+      <%= button_to "Skip", {action: "skip"}, :form => { :id => "skipToNextPlayerButton" } %>
+      <%= button_to "Pass", {action: "pass"}, :form => { :id => "passButton" } %>
+      <%= form_with(url: "/choose", method: "post", :html => { :id => "answerChoices" }) do %> 
+        <%= label_tag(:card, "What do you want to show?") %>
+        <%= text_field_tag(:card) %>
+        <%= submit_tag("Submit") %>
+      <% end %>
+      <%= button_to "End Turn", {action: "end_turn"}, :form => { :id => "endTurn" } %>
+    </div>
+    <div class="col">
+    </div>
+  </div>
+</div>
 
-<%= button_to "Roll", {action: "dice_roll"}, :form => { :id => "dice" } %>
-
-<br>
-
-<%= form_with(url: "/rumor", method: "post", :html => { :id => "rumorDropdowns" }) do %> 
-  <%= select_tag(:room, options_for_select([["Hall", "Hall"], ["Dining Room", "Dining Room"], ["Kitchen", "Kitchen"], ["Patio", "Patio"], ["Observatory", "Observatory"], ["Theater", "Theater"], ["Living Room", "Living Room"], ["Spa", "Spa"], ["Guest House", "Guest House"]])) %>
-  <%= select_tag(:weapon, options_for_select([["Knife", "Knife"], ["Candlestick", "Candlestick"], ["Pistol", "Pistol"], ["Poison", "Poison"], ["Trophy", "Trophy"], ["Rope", "Rope"], ["Bat", "Bat"], ["Ax", "Ax"], ["Dumbbell", "Dumbbell"]])) %>
-  <%= select_tag(:person, options_for_select([["Mustard", "Mustard"], ["Plum", "Plum"], ["Green", "Green"], ["Peacock", "Peacock"], ["Scarlet", "Scarlet"], ["White", "White"]])) %>
-  <%= submit_tag("Submit") %>
-<% end %>
-<br>
-
-<%= button_to "Skip", {action: "skip"}, :form => { :id => "skipToNextPlayerButton" } %>
-<%= button_to "Pass", {action: "pass"}, :form => { :id => "passButton" } %>
-
-<%= form_with(url: "/choose", method: "post", :html => { :id => "answerChoices" }) do %> 
-  <%= label_tag(:card, "What do you want to show?") %>
-  <%= text_field_tag(:card) %>
-  <%= submit_tag("Submit") %>
-<% end %>
-<br>
-<%= form_with(url: "/end_turn", method: "post", :html => { :id => "endTurn" }) do %> 
-  <%= label_tag(:whatever, "Do you want to end your turn?") %>
-  <%= text_field_tag(:whatever) %>
-  <%= submit_tag("Submit") %>
-<% end %>
-<br>
-<h2>Your Cards</h2>
-<p id ="cards"></p>
-
+  
 
 <% if false %>
 Dice roll button. Hidden by default. Rolling activates controller. <%= image_tag("board.jpg") %>
@@ -59,8 +63,4 @@ Dice roll button. Hidden by default. Rolling activates controller. <%= image_tag
 <% if false %>
 Check Rumor drop down, hidden by default. goes back to welcome now. 
 <button onclick="draw2()">Draw line</button>
-<% end %>
-
-<% if false %>
-End turn. Pass to next person. End turn. Goes back to welcome now. 
 <% end %>
