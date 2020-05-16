@@ -3,8 +3,10 @@ class WelcomeController < ApplicationController
   end
   
   def set_name_cookie
-  	name = params[:p]
-  	cookies[:name] = name
+  	player_name = params[:p]
+  	cookies[:name] = player_name
+    uuid = cookies[:uuid]
+    Rails.cache.write(uuid, player_name)
   	# gotta hide cookie
   end 
 
@@ -20,9 +22,19 @@ class WelcomeController < ApplicationController
 
   def dice_roll
   	roll = rand(2..12) 
-  	current = cookies[:uuid]
-  	ActionCable.server.broadcast "player_#{current}", { action: "move", msg: roll}
+  	player_uuid = cookies[:uuid]
+    # player_name = cookies[:name]
+    roll_string = roll.to_s
+    message = "Someone" + " rolled a " + roll_string + "."
+    order = Rails.cache.read("turn_order")
+    for i in 1..2
+      uuid = order[i]
+      ActionCable.server.broadcast "player_#{uuid}", { action: "send_message", message: message, player_name: "game announcer"}
+    end
+  	ActionCable.server.broadcast "player_#{player_uuid}", { action: "move", msg: roll}
   	# need to modify this to let everyone know what you rolled 
+    # Announce to other players what the dice roll was
+    
   end 
 
   def rumor
@@ -56,7 +68,7 @@ class WelcomeController < ApplicationController
   	order = Rails.cache.read("turn_order")
   	player_name = cookies[:name]
   	player_uuid = cookies[:uuid]
-  	message = player_name+" did not show a card and passed."
+  	message = player_name" did not show a card and passed."
   	ActionCable.server.broadcast "player_#{order[0]}", { action: "send_message", message: message }
   	ActionCable.server.broadcast "player_#{order[1]}", { action: "send_message", message: message }
   	ActionCable.server.broadcast "player_#{order[2]}", { action: "send_message", message: message }
