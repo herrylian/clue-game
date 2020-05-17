@@ -4,14 +4,17 @@ class Match < ApplicationRecord
     	when nil
     		Rails.cache.write("people", 1)
     		Rails.cache.write('player1', uuid)
+            ActionCable.server.broadcast "player_#{uuid}", {action: "set_identity", uuid: uuid}
+
     	when 1
     		Rails.cache.write("people", 2)
-    		Rails.cache.write('player2', uuid)
+            Rails.cache.write('player2', uuid)
+    		ActionCable.server.broadcast "player_#{uuid}", {action: "set_identity", uuid: uuid}
     	when 2
-	  		player1_uuid = Rails.cache.read('player1')
-	  		player2_uuid = Rails.cache.read('player2')
-      		Game.start(player1_uuid, player2_uuid, uuid)
+	  		Rails.cache.write('player3', uuid)
+            ActionCable.server.broadcast "player_#{uuid}", {action: "set_identity", uuid: uuid}
       		Rails.cache.write("people", nil)
+            Rails.cache.write("start", "yes")
 	    end  	
     end
 end
