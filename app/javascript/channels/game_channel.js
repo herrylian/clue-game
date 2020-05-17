@@ -8,7 +8,6 @@ consumer.subscriptions.create("GameChannel", {
   	$('#rumorDropdowns').hide()
   	$('#passButton').hide()
     $('#skipToNextPlayerButton').hide()
-  	alert('connected')
   },
 
   disconnected() {
@@ -18,44 +17,51 @@ consumer.subscriptions.create("GameChannel", {
   received(data) {
   	switch(data['action']) {
     	case "set_identity":
-    		document.cookie = 'uuid='+data['msg']
-    		$('#name_field').hide() 
+    		document.cookie = 'uuid='+data['uuid']
     	break
-    	case "start_turn":
-    		//  Set boolean for them to be true
-    		//  jquery - Tell them it's their turn. 
-    		$('#text_box').append("It's your turn. Roll the dice."+"<br>")
+
+      case "add_cards":
+        $('#cards').append(data['cards']+"<br>")
+      break
+
+    	case "start_turn": 
+    		$('#text_box').append("Game announce said: It's your turn. Roll the dice."+"<br>")
     		$('#dice').show() 
     	break
+
     	case "move":
-    		$('#text_box').append('You rolled a '+data['msg']+".<br>")
+    		$('#text_box').append('Game announce said: You rolled a '+data['msg']+".<br>")
     		$('#dice').hide() 
     		// (determine location, coordinates)
     		// Javascript make move. -> pick choice, back to welcome controller. 
     		$('#rumorDropdowns').show()
     	break
+
     	case "send_message":
     		$('#text_box').append(data['player_name']+" said: "+data['message']+"<br>")
     	break
     	case "private_message":
     		$('#text_box').append(data['message']+"<br>")
     	break
-    	case "add_cards":
-    		$('#cards').append(data['msg']+"<br>")
-    	break
-
+    	
     	case "check_rumor":
-    		if(data['rumor'].length === 0)
-    			if(data['last'] === 'false')
+    		if(data['rumor'].length === 0) {
+    			if(data['last'] === 'false') {
             $('#skipToNextPlayerButton').show()
-          else 
+            $('#text_box').append("Game Announcer said: You don't have any of these cards. Skip. <br>")
+          }
+          else {
+            $('#text_box').append("Game Announcer said: You don't have any of these cards. Pass. <br>");
             $('#passButton').show()
-    		else
+          }
+        }
+    		else {
     			$('#answerChoices').show()
     			for(var i = 0; i < data['rumor'].length; i++) {
-    				$('#text_box').append(data['rumor'][i]+"<br>")
+    				$('#text_box').append("Game Announcer said: You have "+data['rumor'][i]+"<br>")
     			}
-
+          $('#text_box').append("Game Announcer said: Choose which card to show. <br>")
+        }
     			// data['rumor']
     			// alert(new_options[0])
 				// $('#answerChoices').empty()
@@ -69,9 +75,18 @@ consumer.subscriptions.create("GameChannel", {
  			$('#rumorDropdowns').hide()
  			$('#endTurn').show()
  		break
- 		case "hide_pass_button":
+ 		case "hide_name_field":
+      $('#name_field').hide()
+    break
+    case "hide_pass_button":
  			$('#passButton').hide()
  		break
+    case "hide_skip_button":
+      $('#skipToNextPlayerButton').hide()
+    break
+    case "hide_answer_button":
+      $('#answerChoices').hide()
+    break
  		case "hide_end_turn_button":
  			$('#endTurn').hide()
  		break
