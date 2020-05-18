@@ -3,37 +3,52 @@ class WelcomeController < ApplicationController
   end
   
   def set_name_cookie
-  	player_name = params[:p]
+  	puts "Names written is: "
+    puts Rails.cache.read("names_written")
+    player_name = params[:p]
   	cookies[:name] = player_name
     uuid = cookies[:uuid]
     uuid_name = uuid+"_name"
     Rails.cache.write(uuid_name, player_name)
+    names_written = Rails.cache.read("names_written")
 
-    if Rails.cache.read("names_written") == nil
+    case 
+    when names_written == nil 
       Rails.cache.write("names_written", 1)
       ActionCable.server.broadcast "player_#{uuid}", { action: "private_message", message: "Welcome, "+player_name+". Waiting on 2 more people." }
       ActionCable.server.broadcast "player_#{uuid}", { action: "hide_name_field" }
-    else
-      names_written = Rails.cache.read("names_written") + 1
-      Rails.cache.write("names_written", names_written)
+      array = [uuid]
+      Rails.cache.write("players", array)
+    when names_written == 1
+      Rails.cache.write("names_written", 2)
       ActionCable.server.broadcast "player_#{uuid}", { action: "private_message", message: "Welcome, "+player_name+". Waiting on 1 more person." }
       ActionCable.server.broadcast "player_#{uuid}", { action: "hide_name_field" }
-      if Rails.cache.read("start") == "yes" && Rails.cache.read("names_written") == 3
-        Rails.cache.write("names_written", nil)
-        Rails.cache.write("start", nil)
-        Game.start()
-      end
+      array = Rails.cache.read("players").push(uuid)
+      Rails.cache.write("players", array)
+
+    when names_written == 2
+      ActionCable.server.broadcast "player_#{uuid}", { action: "hide_name_field" }
+      array = Rails.cache.read("players").push(uuid)
+      Rails.cache.write("players", array)
+      Game.start()
+
+    when names_written > 2
+      Rails.cache.write("names_written", nil)
+      Rails.cache.write("players", nil)
+
     end
   end 
 
   def message
   	message = params[:p]
-  	player_name = cookies[:name]
+  	player_uuid = cookies[:uuid]
+    player_name = cookies[:name]
   	order = Rails.cache.read("turn_order")
   	for i in 0..order.length-1
   		uuid = order[i]
   		ActionCable.server.broadcast "player_#{uuid}", { action: "send_message", message: message, player_name: player_name}
   	end
+    ActionCable.server.broadcast "player_#{player_uuid}", { action: "clear_text_input" }
   end
 
   def dice_roll
