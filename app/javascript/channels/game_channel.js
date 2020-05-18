@@ -90,6 +90,9 @@ consumer.subscriptions.create("GameChannel", {
  		case "hide_end_turn_button":
  			$('#endTurn').hide()
  		break
+    case "clear_text_input":
+      $("input:text").val("")
+    break
  		
     	//case rumor is confirmed
     	// show the original guy. 
